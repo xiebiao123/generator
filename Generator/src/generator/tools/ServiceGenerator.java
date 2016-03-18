@@ -62,7 +62,7 @@ public class ServiceGenerator implements Globles {
 
         rootMap.put("date", DateUtil.getStringToday());
         rootMap.put("rootName", CommonUtil.getRootName());
-        rootMap.put("package", CommonUtil.getDomainPackage(tableInfo.getKey()));
+        rootMap.put("package", CommonUtil.getServicePackage());
         rootMap.put("parentImport", CommonUtil.getDomainParent());
         rootMap.put("implementsArray", CommonUtil.getImplementsArray());
         rootMap.put("classdef", getServiceName(tableInfo.getKey()));

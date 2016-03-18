@@ -55,7 +55,7 @@ public class DtoConditionGenerator implements Globles {
 
         rootMap.put("date", DateUtil.getStringToday());
         rootMap.put("rootName", CommonUtil.getRootName());
-        rootMap.put("package", CommonUtil.getDomainPackage(tableInfo.getKey()));
+        rootMap.put("package", CommonUtil.getConditionPackage());
         rootMap.put("parentImport", CommonUtil.getConditionDomainParent());
         rootMap.put("classdef", getDtoConditionName(tableInfo.getKey()));
         rootMap.put("extends", CommonUtil.getExtends(CommonUtil.getConditionDomainParent()));

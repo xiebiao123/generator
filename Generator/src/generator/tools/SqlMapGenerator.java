@@ -62,7 +62,10 @@ public class SqlMapGenerator {
         Properties props = PropertyFileReader.getProperties("config.base");
         List <String> commonColumns = Arrays.asList(props.getProperty("update.columns.nouse").split(","));
 
-        rootMap.put("tblName", CommonUtil.getOutputColumnName(tableInfo.getKey(), false));
+        rootMap.put("tableName", CommonUtil.getOutputColumnName(tableInfo.getKey(), false));
+        rootMap.put("TableName", CommonUtil.getOutputColumnName(tableInfo.getKey(), true));
+        rootMap.put("rootName", CommonUtil.getRootName());
+        rootMap.put("dtoPackage", CommonUtil.getDtoPackage());
         rootMap.put("tblNameSql", tableInfo.getKey());
 
         //        rootMap.put("package", CommonUtil.getDomainPackage(tableInfo.getKey()));
@@ -132,7 +135,7 @@ public class SqlMapGenerator {
         // add end for where key DEL_FLG='0'
 
         rootMap.put("primaryKeys", primaryKey);
-        rootMap.put("selectSql", getSelectSql(tableInfo));
+        rootMap.put("ColumbSql", getSelectColumn(tableInfo));
         rootMap.put("insertKeySql", getInsertKeySql(tableInfo));
         rootMap.put("insertValueSql", getInsertValueSql(tableInfo));
         rootMap.put("updateSql", getUpdateSql(tableInfo));
@@ -147,45 +150,32 @@ public class SqlMapGenerator {
         }
     }
 
-    private static String getSelectSql(Entry <String, List <TableInfoBean>> tableInfo) {
+    private static String getSelectColumn(Entry <String, List <TableInfoBean>> tableInfo) {
 
-        String selectSql = "select\r\n";
-
-        selectSql += "\t\t";
+        String selectSql = "";
         for (TableInfoBean tableInfoBean : tableInfo.getValue()) {
             selectSql += tableInfoBean.getColumnName() + ",";
         }
-
         selectSql = selectSql.substring(0, selectSql.length() - 1);
-        selectSql += "\r\n";
-        selectSql += "\t\t";
-        selectSql += "from " + tableInfo.getKey();
 
         return selectSql;
     }
 
     private static String getInsertKeySql(Entry <String, List <TableInfoBean>> tableInfo) {
 
-        String insertSql = "\t\tinsert into\r\n";
-
-        insertSql += "\t\t";
+        String insertSql = "";
         String keys = "";
-        //        String values = "";
+        int count = 1;
         for (TableInfoBean tableInfoBean : tableInfo.getValue()) {
-            keys += tableInfoBean.getColumnName() + ",";
-            //            values += "#"
-            //                + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false)
-            //                + "#,";
+        	if(count!=1){
+        		keys += tableInfoBean.getColumnName() + ",";
+        	}else{
+        		count++;
+        	}
         }
-
         keys = keys.substring(0, keys.length() - 1);
-        //        values = values.substring(0, values.length() - 1);
-
         insertSql += tableInfo.getKey() + "(";
         insertSql += keys + ")";
-        //        insertSql += "\t\t";
-        //        insertSql += "values(" + values + ")";
-
         return insertSql;
     }
 
@@ -195,20 +185,23 @@ public class SqlMapGenerator {
         ArrayList <TableInfoBean> tableInfoList = new ArrayList <TableInfoBean>();
 
         int columnCount = 0;
-
+        int count=1;
         for (TableInfoBean tableInfoBean : tableInfo.getValue()) {
-            tableInfoList.add(columnCount, tableInfoBean);
-            columnCount++;
+        	if(count!=1){
+        		tableInfoList.add(columnCount, tableInfoBean);
+        		columnCount++;
+        	}else{
+        		count++;
+        	}
         }
 
-        String updateSql = "\t\t<dynamic>\r\n\t\t(\r\n";
-
+        String updateSql = "<dynamic>\r\n\t\t(\r\n";
         for (int i = 0; i < tableInfoList.size(); i++) {
 
             TableInfoBean tableInfoBean = tableInfoList.get(i);
             if ("java.math.BigDecimal".equals(CommonUtil.getJavaMappingType(tableInfoBean.getTypeName()))) {
 
-                updateSql += "\t\t<isEmpty property=\"" + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "\">\r\n";
+                updateSql += "\t<isEmpty property=\"" + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "\">\r\n";
                 if (i < tableInfoList.size() - 1) {
                     if (tableInfoBean.isNullAble()) {
                         updateSql += "\t\t\tnull,\r\n";
@@ -292,29 +285,38 @@ public class SqlMapGenerator {
     private static String getUpdateSql(Entry <String, List <TableInfoBean>> tableInfo) {
 
         String updateSql = "";
-
+        int count =1;
         for (TableInfoBean tableInfoBean : tableInfo.getValue()) {
-            if (!"CRT_TIMESTAMP".equals(tableInfoBean.getColumnName()) && !"CRT_USER_ID".equals(tableInfoBean.getColumnName())) {
-                updateSql += "\t\t\t<isNotNull prepend=\",\" property=\"" + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false)
-                        + "\">\r\n";
+        	if(count!=1){
+        		 if (!"CRT_TIMESTAMP".equals(tableInfoBean.getColumnName()) && !"CRT_USER_ID".equals(tableInfoBean.getColumnName())) {
+        			 if(count!=2){
+        				 updateSql += "\t\t\t<isNotNull prepend=\",\" property=\"" + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false)
+                         + "\">\r\n"; 
+        			 }else{
+        				 updateSql += "<isNotNull property=\"" + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false)
+                         + "\">\r\n"; 
+        				 count++;
+        			 }
+                     updateSql += "\t\t\t\t<isEmpty property=\"" + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "\">\r\n";
+                     if ("java.math.BigDecimal".equals(CommonUtil.getJavaMappingType(tableInfoBean.getTypeName())) && !tableInfoBean.isNullAble()) {
+                         updateSql += "\t\t\t\t\t" + tableInfoBean.getColumnName() + " = 0\r\n";
+                     } else if ("java.lang.String".equals(CommonUtil.getJavaMappingType(tableInfoBean.getTypeName())) && !tableInfoBean.isNullAble()) {
+                         updateSql += "\t\t\t\t\t" + tableInfoBean.getColumnName() + " = ''\r\n";
+                     } else {
+                         updateSql += "\t\t\t\t\t" + tableInfoBean.getColumnName() + " = null\r\n";
+                     }
+                     updateSql += "\t\t\t\t</isEmpty>\r\n";
 
-                updateSql += "\t\t\t\t<isEmpty property=\"" + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "\">\r\n";
-                if ("java.math.BigDecimal".equals(CommonUtil.getJavaMappingType(tableInfoBean.getTypeName())) && !tableInfoBean.isNullAble()) {
-                    updateSql += "\t\t\t\t\t" + tableInfoBean.getColumnName() + " = 0\r\n";
-                } else if ("java.lang.String".equals(CommonUtil.getJavaMappingType(tableInfoBean.getTypeName())) && !tableInfoBean.isNullAble()) {
-                    updateSql += "\t\t\t\t\t" + tableInfoBean.getColumnName() + " = ''\r\n";
-                } else {
-                    updateSql += "\t\t\t\t\t" + tableInfoBean.getColumnName() + " = null\r\n";
-                }
-                updateSql += "\t\t\t\t</isEmpty>\r\n";
+                     updateSql += "\t\t\t\t<isNotEmpty property=\"" + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "\">\r\n";
+                     updateSql += "\t\t\t\t\t" + tableInfoBean.getColumnName() + " = #"
+                             + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "#\r\n";
+                     updateSql += "\t\t\t\t</isNotEmpty>\r\n";
 
-                updateSql += "\t\t\t\t<isNotEmpty property=\"" + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "\">\r\n";
-                updateSql += "\t\t\t\t\t" + tableInfoBean.getColumnName() + " = #"
-                        + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "#\r\n";
-                updateSql += "\t\t\t\t</isNotEmpty>\r\n";
-
-                updateSql += "\t\t\t</isNotNull>\r\n";
-            }
+                     updateSql += "\t\t\t</isNotNull>\r\n";
+                 }
+        	}else{
+        		count++;
+        	}
         }
 
         return updateSql;
@@ -326,11 +328,11 @@ public class SqlMapGenerator {
         String whereSql = "";
 
         for (TableInfoBean tableInfoBean : tableInfo.getValue()) {
-            whereSql += "\t\t\t<isNotEmpty prepend=\"and\" property=\"condition"
+            whereSql += "\t\t\t<isNotNull prepend=\"and\" property=\"condition"
                     + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), true) + "\">\r\n";
             whereSql += "\t\t\t\t" + tableInfoBean.getColumnName() + " = #condition"
                     + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), true) + "#\r\n";
-            whereSql += "\t\t\t</isNotEmpty>\r\n";
+            whereSql += "\t\t\t</isNotNull>\r\n";
         }
 
         return whereSql;

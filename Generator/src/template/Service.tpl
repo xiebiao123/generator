@@ -17,11 +17,11 @@ public interface ${TableName}Service {
 	/**
 	 * 新增${tableComment}
 	 */
-	public Long add(${TableName} po);
+	public Integer add(${TableName} po);
 	/**
 	 * 删除${tableComment}
 	 */
-	public int delete(Long id);
+	public int delete(Integer id);
 	/**
 	 * 修改${tableComment}
 	 */
@@ -29,7 +29,7 @@ public interface ${TableName}Service {
 	/**
 	 * 根据id获取${tableComment}
 	 */
-	public City findById(Long id);
+	public City findById(Integer id);
 	/**
 	 * 分页查询${tableComment}
 	 */

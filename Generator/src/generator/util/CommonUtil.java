@@ -208,7 +208,7 @@ public class CommonUtil implements Globles {
     
     public static String getSqlMapPackage(String tableName) {
 
-       return getDaoPackage(tableName) + ".ibatis";
+       return  "conf/ibatis";
     }
 
     /**

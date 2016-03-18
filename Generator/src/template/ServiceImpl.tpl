@@ -22,11 +22,11 @@ public class ${TableName}ServiceImpl implements ${TableName}Service{
 	@Resource
 	private ${TableName}Dao ${tableName}Dao;
 	
-	public Long add(${TableName} po) {
+	public Integer add(${TableName} po) {
 		return ${tableName}Dao.add(po);
 	}
 	
-	public int delete(Long id) {
+	public int delete(Integer id) {
 		return ${tableName}Dao.delete(id);
 	}
 	
@@ -34,7 +34,7 @@ public class ${TableName}ServiceImpl implements ${TableName}Service{
 		return ${tableName}Dao.update(po);
 	}
 	
-	public ${TableName} findById(Long id) {
+	public ${TableName} findById(Integer id) {
 		return ${tableName}Dao.findById(id);
 	}
 	

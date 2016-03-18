@@ -40,12 +40,16 @@ public class ${classdef} extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public MyResponse<${TableName}> findCityById(@PathVariable Long id) {
+	public MyResponse<${TableName}> findCityById(@PathVariable Integer id) {
 		MyResponse<${TableName}> response = new MyResponse<${TableName}>();
-		${TableName} ${tableName}= cityService.findById(id);
-		response.setData(${tableName});
-		logger.info(${tableName});
-		response.setStatusResponse(CommStatusEnum.FIND);
+		try {
+			${TableName} ${tableName}= cityService.findById(id);
+			response.setData(${tableName});
+			logger.info(${tableName});
+			response.setStatusResponse(CommStatusEnum.FIND);
+		} catch (Throwable t) {
+			response.setErrorResponse(CommErrorEnum.Err03);
+		}
 		return response;
 	}
 
@@ -56,9 +60,13 @@ public class ${classdef} extends BaseController{
 	@RequestMapping(method = RequestMethod.POST)
 	public MyResponse<Void> addCity(@Valid @RequestBody ${TableName} ${tableName}) {
 		MyResponse<Void> response = new MyResponse<Void>();
-		Long id = ${tableName}Service.add(${tableName});
-		logger.info(id);
-		response.setStatusResponse(CommStatusEnum.ADD);
+		try {
+			Integer id = ${tableName}Service.add(${tableName});
+			logger.info(id);
+			response.setStatusResponse(CommStatusEnum.ADD);
+		} catch (Throwable t) {
+			response.setErrorResponse(CommErrorEnum.Err03);
+		}
 		return response;
 	}
 
@@ -67,11 +75,15 @@ public class ${classdef} extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public MyResponse<Void> deleteCity(@PathVariable Long id) {
+	public MyResponse<Void> deleteCity(@PathVariable Integer id) {
 		MyResponse<Void> response = new MyResponse<Void>();
-		int count = ${tableName}Service.delete(id);
-		logger.info(count);
-		response.setStatusResponse(CommStatusEnum.DELETE);
+		try {
+			int count = ${tableName}Service.delete(id);
+			logger.info(count);
+			response.setStatusResponse(CommStatusEnum.DELETE);
+		} catch (Throwable t) {
+			response.setErrorResponse(CommErrorEnum.Err03);
+		}
 		return response;
 	}
 
@@ -82,9 +94,13 @@ public class ${classdef} extends BaseController{
 	@RequestMapping(method = RequestMethod.PUT)
 	public MyResponse<Void> updateCity(@Valid @RequestBody ${TableName} ${tableName}) {
 		MyResponse<Void> response = new MyResponse<Void>();
-		int count = ${tableName}Service.update(${tableName});
-		logger.info(count);
-		response.setStatusResponse(CommStatusEnum.UPDATE);
+		try {
+			int count = ${tableName}Service.update(${tableName});
+			logger.info(count);
+			response.setStatusResponse(CommStatusEnum.UPDATE);
+		} catch (Throwable t) {
+			response.setErrorResponse(CommErrorEnum.Err03);
+		}
 		return response;
 	}
 
@@ -95,10 +111,18 @@ public class ${classdef} extends BaseController{
 	@RequestMapping(method = RequestMethod.GET)
 	public MyResponse<List<${TableName}>> findCityPageByCondition(${TableName}Condition condition) {
 		MyResponse<List<${TableName}>> response = new MyResponse<List<${TableName}>>();
-		List<${TableName}> ${tableName}List = ${tableName}Service.findPageByCondition(condition);
-		logger.info(${tableName}List);
-		response.setData(${tableName}List);
-		response.setStatusResponse(CommStatusEnum.FIND);
+		try {
+			List<${TableName}> ${tableName}List = ${tableName}Service.findPageByCondition(condition);
+			if(cityList.size()==0){
+				response.setStatusResponse(CommStatusEnum.NOFIND);
+				return response;
+			}
+			logger.info(${tableName}List);
+			response.setData(${tableName}List);
+			response.setStatusResponse(CommStatusEnum.FIND);
+		} catch (Throwable t) {
+			response.setErrorResponse(CommErrorEnum.Err03);
+		}
 		return response;
 	}
 }

@@ -63,7 +63,7 @@ public class DtoGenerator implements Globles {
 
         rootMap.put("date", DateUtil.getStringToday());
         rootMap.put("rootName", CommonUtil.getRootName());
-        rootMap.put("package", CommonUtil.getDomainPackage(tableInfo.getKey()));
+        rootMap.put("package", CommonUtil.getDtoPackage());
         rootMap.put("parentImport", CommonUtil.getDomainParent());
         rootMap.put("implementsArray", CommonUtil.getImplementsArray());
         rootMap.put("classdef", getDtoName(tableInfo.getKey()));
@@ -89,8 +89,7 @@ public class DtoGenerator implements Globles {
 
             String importValue = CommonUtil.getJavaMappingType(tableInfoBean.getTypeName());
 
-            if (!importList.contains(importValue)
-                && !importSkip.contains(importValue)) {
+            if (!importList.contains(importValue) && !importSkip.contains(importValue)) {
                 importList.add(importValue);
             }
 
