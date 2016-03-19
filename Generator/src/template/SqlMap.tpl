@@ -28,7 +28,7 @@
 	<!--删除语句 -->
     <delete id="delete" parameterClass="java.lang.Integer">  
         DELETE FROM 
-        	${tableName} 
+        	${tableNameSql} 
         WHERE 
         	id = #id#  
     </delete>
@@ -36,7 +36,7 @@
     <!--修改语句 -->
     <update id="update" parameterClass="${tableName}">  
         UPDATE 
-        	${tableName} 
+        	${tableNameSql} 
         SET <!-- updateTime = sysdate  -->
 		<dynamic>
 			${updateSql}
@@ -50,22 +50,34 @@
 		SELECT  
 			<include refid="queryCondition"/> 
 		FROM 
-			${tableName} 
+			${tableNameSql} 
 		WHERE
 			id = #id#
 	</select>
 	
-	<!--分页查询-->
-	<select id="findPageByCondition" resultMap="cityResult" parameterClass="cityCondition">
+	
+	<sql id="queryConditionSql">
 		SELECT 
 			<include refid="queryCondition"/> 
 		FROM  
-			${tableName} 
+			${tableNameSql} 
 	    <dynamic prepend="WHERE">
 ${conditionSql}
 	    </dynamic>
+	</sql>
+	
+	<!--分页查询-->
+	<select id="findPageByCondition" resultMap="${tableName}Result" parameterClass="${tableName}Condition">
+		<include refid="queryConditionSql"/>
 		limit 
 			#startRow#,#endRow# 
+	</select>
+	
+	<select id="countByCondition" parameterClass="${tableName}Condition" resultClass="java.lang.Integer">
+		select 
+			count(*) 
+		from 
+			(<include refid="queryConditionSql"/>) as da
 	</select>
 	
 </sqlMap>

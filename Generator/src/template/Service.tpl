@@ -29,10 +29,15 @@ public interface ${TableName}Service {
 	/**
 	 * 根据id获取${tableComment}
 	 */
-	public City findById(Integer id);
+	public ${TableName} findById(Integer id);
 	/**
 	 * 分页查询${tableComment}
 	 */
 	public List<${TableName}> findPageByCondition(${TableName}Condition pc);
+	
+	/**
+	 * 统计查询数据的条数
+	 */
+	public Integer countByCondition(${TableName}Condition pc);
 	
 }

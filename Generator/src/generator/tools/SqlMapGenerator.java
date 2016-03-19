@@ -66,7 +66,7 @@ public class SqlMapGenerator {
         rootMap.put("TableName", CommonUtil.getOutputColumnName(tableInfo.getKey(), true));
         rootMap.put("rootName", CommonUtil.getRootName());
         rootMap.put("dtoPackage", CommonUtil.getDtoPackage());
-        rootMap.put("tblNameSql", tableInfo.getKey());
+        rootMap.put("tableNameSql", tableInfo.getKey());
 
         //        rootMap.put("package", CommonUtil.getDomainPackage(tableInfo.getKey()));
         rootMap.put("package", CommonUtil.getDaoPackage());
@@ -328,10 +328,10 @@ public class SqlMapGenerator {
         String whereSql = "";
 
         for (TableInfoBean tableInfoBean : tableInfo.getValue()) {
-            whereSql += "\t\t\t<isNotNull prepend=\"and\" property=\"condition"
-                    + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), true) + "\">\r\n";
-            whereSql += "\t\t\t\t" + tableInfoBean.getColumnName() + " = #condition"
-                    + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), true) + "#\r\n";
+            whereSql += "\t\t\t<isNotNull prepend=\"and\" property=\""
+                    + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "\">\r\n";
+            whereSql += "\t\t\t\t" + tableInfoBean.getColumnName() + " = #"
+                    + CommonUtil.getOutputColumnName(tableInfoBean.getColumnName(), false) + "#\r\n";
             whereSql += "\t\t\t</isNotNull>\r\n";
         }
 

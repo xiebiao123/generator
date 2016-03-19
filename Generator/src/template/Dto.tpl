@@ -7,8 +7,6 @@ package ${rootName}.${tableName}.${package};
  */
 public class ${classdef}{
 
-    private static final long serialVersionUID = 1L; 
-
 <#list fieldList as field>
     /** ${field.comment} */
     private ${field.type} ${field.name};

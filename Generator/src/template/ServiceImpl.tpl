@@ -41,4 +41,8 @@ public class ${TableName}ServiceImpl implements ${TableName}Service{
 	public List<${TableName}> findPageByCondition(${TableName}Condition pc) {
 		return ${tableName}Dao.findPageByCondition(pc);
 	}
+	
+	public Integer countByCondition(${TableName}Condition pc) {
+		return ${tableName}Dao.countByCondition(pc);
+	}
 }

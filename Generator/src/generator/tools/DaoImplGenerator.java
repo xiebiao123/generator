@@ -49,7 +49,7 @@ public class DaoImplGenerator implements Globles {
 
             tpl.process(rootMap, writer);
             
-            FileUtils.writeStringToFile(new File(_package + "/package.html"), "dao", "UTF-8");
+           // FileUtils.writeStringToFile(new File(_package + "/package.html"), "dao", "UTF-8");
         } finally {
             if (null != writer) {
                 writer.flush();

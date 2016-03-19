@@ -3,7 +3,7 @@
 public interface Globles {
 	
 	
-    public static final String DOMAIN_SUFFIX = "Dto";
+    public static final String DOMAIN_SUFFIX = "";
 
     public static final String CONDITIONDOMAIN_SUFFIX = "Condition";
 

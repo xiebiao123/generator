@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import ${rootName}.base.BaseController;
+
 import ${rootName}.${tableName}.dto.${TableName};
 import ${rootName}.${tableName}.dto.${TableName}Condition;
 import ${rootName}.${tableName}.service.${TableName}Service;
 import ${rootName}.enums.CommStatusEnum;
+import ${rootName}.enums.CommErrorEnum;
 import ${rootName}.util.MyResponse;
 
 /**
@@ -43,11 +45,12 @@ public class ${classdef} extends BaseController{
 	public MyResponse<${TableName}> findCityById(@PathVariable Integer id) {
 		MyResponse<${TableName}> response = new MyResponse<${TableName}>();
 		try {
-			${TableName} ${tableName}= cityService.findById(id);
+			${TableName} ${tableName}= ${tableName}Service.findById(id);
 			response.setData(${tableName});
 			logger.info(${tableName});
 			response.setStatusResponse(CommStatusEnum.FIND);
 		} catch (Throwable t) {
+			logger.error("系统错误", t);
 			response.setErrorResponse(CommErrorEnum.Err03);
 		}
 		return response;
@@ -65,6 +68,7 @@ public class ${classdef} extends BaseController{
 			logger.info(id);
 			response.setStatusResponse(CommStatusEnum.ADD);
 		} catch (Throwable t) {
+			logger.error("系统错误", t);
 			response.setErrorResponse(CommErrorEnum.Err03);
 		}
 		return response;
@@ -82,6 +86,7 @@ public class ${classdef} extends BaseController{
 			logger.info(count);
 			response.setStatusResponse(CommStatusEnum.DELETE);
 		} catch (Throwable t) {
+			logger.error("系统错误", t);
 			response.setErrorResponse(CommErrorEnum.Err03);
 		}
 		return response;
@@ -99,6 +104,7 @@ public class ${classdef} extends BaseController{
 			logger.info(count);
 			response.setStatusResponse(CommStatusEnum.UPDATE);
 		} catch (Throwable t) {
+			logger.error("系统错误", t);
 			response.setErrorResponse(CommErrorEnum.Err03);
 		}
 		return response;
@@ -112,15 +118,18 @@ public class ${classdef} extends BaseController{
 	public MyResponse<List<${TableName}>> findCityPageByCondition(${TableName}Condition condition) {
 		MyResponse<List<${TableName}>> response = new MyResponse<List<${TableName}>>();
 		try {
-			List<${TableName}> ${tableName}List = ${tableName}Service.findPageByCondition(condition);
-			if(cityList.size()==0){
+			int count =  ${tableName}Service.countByCondition(condition);
+			if(count==0){
 				response.setStatusResponse(CommStatusEnum.NOFIND);
 				return response;
 			}
+			response.setToken(count);
+			List<${TableName}> ${tableName}List = ${tableName}Service.findPageByCondition(condition);
 			logger.info(${tableName}List);
 			response.setData(${tableName}List);
 			response.setStatusResponse(CommStatusEnum.FIND);
 		} catch (Throwable t) {
+			logger.error("系统错误", t);
 			response.setErrorResponse(CommErrorEnum.Err03);
 		}
 		return response;

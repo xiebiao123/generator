@@ -48,7 +48,7 @@ public class ServiceImplGenerator implements Globles {
             tpl.setEncoding("UTF-8");
 
             tpl.process(rootMap, writer);
-            FileUtils.writeStringToFile(new File(_package + "/package.html"), "service", "UTF-8");
+           // FileUtils.writeStringToFile(new File(_package + "/package.html"), "service", "UTF-8");
         } finally {
             if (null != writer) {
                 writer.flush();
@@ -63,7 +63,7 @@ public class ServiceImplGenerator implements Globles {
 
         rootMap.put("date", DateUtil.getStringToday());
         rootMap.put("rootName", CommonUtil.getRootName());
-        rootMap.put("package", CommonUtil.getServicePackage());
+        rootMap.put("package", CommonUtil.getServiceImplPackage());
         rootMap.put("parentImport", CommonUtil.getServiceParent());
         rootMap.put("dtoImport", CommonUtil.getDomainPackage( tableInfo.getKey() ) + "." + CommonUtil.getOutputColumnName(tableInfo.getKey(), true));
         rootMap.put("daoImport", CommonUtil.getDaoPackage( tableInfo.getKey() ) + "." + CommonUtil.getOutputColumnName(tableInfo.getKey(), true));

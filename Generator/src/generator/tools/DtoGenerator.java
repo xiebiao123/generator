@@ -48,7 +48,7 @@ public class DtoGenerator implements Globles {
             tpl.setEncoding("UTF-8");
 
             tpl.process(rootMap, writer);
-            FileUtils.writeStringToFile(new File(_package + "/package.html"), "dto", "UTF-8");
+           // FileUtils.writeStringToFile(new File(_package + "/package.html"), "dto", "UTF-8");
         } finally {
             if (null != writer) {
                 writer.flush();

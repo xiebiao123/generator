@@ -7,9 +7,7 @@ import ${rootName}.util.Paging;
  * @version 1.00
  * ${date}
  */
-public class ${classdef}Condition extends Paging{
-
-    private static final long serialVersionUID = 1L; 
+public class ${classdef} extends Paging{
 
 <#list fieldList as field>
     /** ${field.comment} */
