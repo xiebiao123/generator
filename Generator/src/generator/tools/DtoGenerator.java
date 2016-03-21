@@ -89,6 +89,7 @@ public class DtoGenerator implements Globles {
 
             String importValue = CommonUtil.getJavaMappingType(tableInfoBean.getTypeName());
 
+            
             if (!importList.contains(importValue) && !importSkip.contains(importValue)) {
                 importList.add(importValue);
             }

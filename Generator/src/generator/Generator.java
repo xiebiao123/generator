@@ -27,7 +27,7 @@ import generator.util.CommonUtil;
 public class Generator {
 
     private static Configuration cfg = null;
-
+   
     static {
         if (null == cfg) {
             cfg = new Configuration();

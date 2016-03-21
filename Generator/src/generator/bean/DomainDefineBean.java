@@ -1,7 +1,8 @@
 ﻿package generator.bean;
 
-public class DomainDefineBean {
 
+public class DomainDefineBean {
+	
     private String type = null;
 
     private String name = null;
