@@ -118,6 +118,10 @@ public class ${classdef} extends BaseController{
 	public MyResponse<List<${TableName}>> findCityPageByCondition(${TableName}Condition condition) {
 		MyResponse<List<${TableName}>> response = new MyResponse<List<${TableName}>>();
 		try {
+			/*初始化分页查询*/
+			if(condition.getPageSize()>0){
+				condition.init();
+			}
 			int count =  ${tableName}Service.countByCondition(condition);
 			if(count==0){
 				response.setStatusResponse(CommStatusEnum.NOFIND);
