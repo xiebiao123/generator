@@ -23,6 +23,9 @@
 			${insertKeySql}
 		values
 			${insertValueSql}
+		<selectKey resultClass="java.lang.Integer" keyProperty="id">  
+        	select last_insert_id() as ID from ${tableName} limit 1  
+    	</selectKey>
 	</insert>
 
 	<!--删除语句 -->
